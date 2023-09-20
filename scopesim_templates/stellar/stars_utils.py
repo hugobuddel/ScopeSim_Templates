@@ -31,9 +31,7 @@ def nearest_spec_type(spec, cat_tbl):
         roman = spec[4:] if spec[2] == "." else spec[2:]
         spec_evol = roman_to_arabic(roman)
         new_evol = avail_evols[np.argmin(np.abs(avail_evols - spec_evol))]
-        new_spec = spec[:2] + arabic_to_roman(new_evol).upper()
-        return new_spec
-
+        return spec[:2] + arabic_to_roman(new_evol).upper()
     if spec[0] in "OBAFGKM":
         cat_lums = cat_tbl["luminosity"]
         mask = np.where([spec[0] == lum[0] for lum in cat_lums])[0]

@@ -24,10 +24,9 @@ def hdu_to_synphot(hdu):
     flux = hdu.data["flux"]
     flux_unit = u.Unit(hdu.header["TUNIT2"])
 
-    spec = SourceSpectrum(Empirical1D, points=wave*wave_unit,
-                          lookup_table=flux*flux_unit)
-
-    return spec
+    return SourceSpectrum(
+        Empirical1D, points=wave * wave_unit, lookup_table=flux * flux_unit
+    )
 
 
 def vega_spectrum(mag=0):
@@ -60,8 +59,7 @@ def function_call_str(func, args=None, kwargs=None) -> str:
     call_kwargs = dict(_get_kwargs_and_defaults(args, kwargs, defaults))
     kwargs_repr = ", ".join(f"{k}={v!r}" for k, v in call_kwargs.items())
     func_str = f"{func.__module__}.{func.__qualname__}"
-    call_str = f"{func_str}({kwargs_repr})"
-    return call_str
+    return f"{func_str}({kwargs_repr})"
 
 
 def add_function_call_str(func):
@@ -91,11 +89,7 @@ def make_img_wcs_header(ra, dec, pixel_scale, image_size):
         x, y where x, y are integers
 
     """
-    if isinstance(ra, str):  # just assume is in the classical formats
-        ra_unit = u.hourangle
-    else:
-        ra_unit = u.deg
-
+    ra_unit = u.hourangle if isinstance(ra, str) else u.deg
     if isinstance(pixel_scale, u.Quantity):
         pixel_scale = pixel_scale.to(u.arcsec).value
 

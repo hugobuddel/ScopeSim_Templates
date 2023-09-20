@@ -28,13 +28,13 @@ def _basic_imagehdu(n=11):
 
 def _make_dummy_cube(scale, wave_unit, ref_wave, wave_step, wave_type, bunit):
 
-    if isinstance(scale, u.Quantity) is False:
+    if not isinstance(scale, u.Quantity):
         scale = scale * u.arcsec
-    if isinstance(wave_unit, u.core.Unit) is False:
+    if not isinstance(wave_unit, u.core.Unit):
         wave_unit = u.AA
-    if isinstance(ref_wave, u.Quantity) is False:
+    if not isinstance(ref_wave, u.Quantity):
         ref_wave = ref_wave * u.AA
-    if isinstance(wave_step, u.Quantity) is False:
+    if not isinstance(wave_step, u.Quantity):
         wave_step = wave_step * u.AA
 
     data = np.ones(shape=(100, 20, 20))
@@ -60,6 +60,4 @@ def _make_dummy_cube(scale, wave_unit, ref_wave, wave_step, wave_type, bunit):
                               CTYPE3=wave_type,
                               BUNIT=bunit))
 
-    hdu = fits.ImageHDU(data=data, header=header)
-
-    return hdu
+    return fits.ImageHDU(data=data, header=header)

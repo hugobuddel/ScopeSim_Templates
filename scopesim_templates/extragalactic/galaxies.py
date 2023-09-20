@@ -102,10 +102,15 @@ def galaxy(sed,           # The SED of the galaxy
     elif isinstance(sed, Spextrum.__bases__):
         spec = sed.redshift(z=z)
 
-    src = source_from_array(arr=gal.intensity, sed=spec,
-                            pixel_scale=pixel_scale, amplitude=amplitude,
-                            filter_curve=filter_curve, ra=ra, dec=dec)
-    return src
+    return source_from_array(
+        arr=gal.intensity,
+        sed=spec,
+        pixel_scale=pixel_scale,
+        amplitude=amplitude,
+        filter_curve=filter_curve,
+        ra=ra,
+        dec=dec,
+    )
 
 
 def _get_masked_subsources(gal, ngrid, scaled_sp, header):

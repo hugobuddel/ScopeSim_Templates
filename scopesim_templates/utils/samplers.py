@@ -42,7 +42,7 @@ def randomvariate(pdf, n, xmin, xmax):
         y = np.random.uniform(pmin, pmax)
         if y <= pdf(x):
             ran.append(x)
-            naccept = naccept + 1
+            naccept += 1
             #  print pdf(x)
             ntrial = ntrial + 1
 
@@ -105,7 +105,7 @@ def _metropolis_sampler(pdf, nsamples, xmin, xmax):
     """
     x = np.random.uniform(xmin, xmax)  # start somewhere
 
-    for i in range(nsamples):
+    for _ in range(nsamples):
         trial = np.random.uniform(xmin, xmax)  # random neighbour from the proposal distribution
         acceptance = pdf(trial) / pdf(x)
 

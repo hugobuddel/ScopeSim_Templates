@@ -63,10 +63,7 @@ class IMF():
         self._multi_props = multiplicity
         self._mass_limits = mass_limits
 
-        if multiplicity is None:
-            self.make_multiples = False
-        else:
-            self.make_multiples = True
+        self.make_multiples = multiplicity is not None
 
     def generate_cluster(self, totalMass, seed=None):
         """
@@ -334,16 +331,12 @@ class IMF_broken_powerlaw(IMF):
             raise ValueError(msg)
 
         self._mass_limits = np.atleast_1d(mass_limits)
-        self._m_limits_low = mass_limits[0:-1]
+        self._m_limits_low = mass_limits[:-1]
         self._m_limits_high = mass_limits[1:]
         self._powers = powers
         self._multi_props = multiplicity
 
-        if multiplicity is None:
-            self.make_multiples = False
-        else:
-            self.make_multiples = True
-
+        self.make_multiples = multiplicity is not None
         # Calculate the coeffs to make the function continuous
         nterms = len(self._powers)
         coeffs = np.ones(nterms, dtype=float)
@@ -382,9 +375,7 @@ class IMF_broken_powerlaw(IMF):
             z = delta(m[i] - self._m_limits_high).prod()
             xi[i] = self.k * z * y
 
-        if return_float:
-            return xi[0]
-        return xi
+        return xi[0] if return_float else xi
 
     def xi_new(self, m):
         """
@@ -428,9 +419,7 @@ class IMF_broken_powerlaw(IMF):
 
         xi = self.k * z * y
 
-        if return_float:
-            return xi[0]
-        return xi
+        return xi[0] if return_float else xi
 
     def m_xi(self, m):
         """Mass-weighted probability m*xi."""
@@ -466,9 +455,7 @@ class IMF_broken_powerlaw(IMF):
 
         mxi = self.k * z * y
 
-        if return_float:
-            return mxi[0]
-        return mxi
+        return mxi[0] if return_float else mxi
 
     def getProbabilityBetween(self, massLo, massHi):
         """
@@ -516,9 +503,7 @@ class IMF_broken_powerlaw(IMF):
 
             val[i] = self.k * (y1 + y2)
 
-        if return_float:
-            return val[0]
-        return val
+        return val[0] if return_float else val
 
     def prim_mxi(self, a):
         """Helper function."""
@@ -541,9 +526,7 @@ class IMF_broken_powerlaw(IMF):
 
             val[i] = self.k * (y1 + y2)
 
-        if return_float:
-            return val[0]
-        return val
+        return val[0] if return_float else val
 
     def normalize(self, Mcl, Mmin=None, Mmax=None):
         """
@@ -560,15 +543,9 @@ class IMF_broken_powerlaw(IMF):
 
             Mmin = self._m_limits_low[0]
 
-        if Mmax > Mcl:
-            Mmax = Mcl
-
-        if Mmax > self._m_limits_high[-1]:
-            Mmax = self._m_limits_high[-1]
-
-        if Mmin < self._m_limits_low[0]:
-            Mmin = self._m_limits_low[0]
-
+        Mmax = min(Mmax, Mcl)
+        Mmax = min(Mmax, self._m_limits_high[-1])
+        Mmin = max(Mmin, self._m_limits_low[0])
         self.norm_Mmin = Mmin
         self.norm_Mmax = Mmax
 
@@ -586,15 +563,9 @@ class IMF_broken_powerlaw(IMF):
         if Mmin is None:
             Mmin = self._m_limits_low[0]
 
-        if Mmax > Mcl:
-            Mmax = Mcl
-
-        if Mmax > self._m_limits_high[-1]:
-            Mmax = self._m_limits_high[-1]
-
-        if Mmin < self._m_limits_low[0]:
-            Mmin = self._m_limits_low[0]
-
+        Mmax = min(Mmax, Mcl)
+        Mmax = min(Mmax, self._m_limits_high[-1])
+        Mmin = max(Mmin, self._m_limits_low[0])
         a = Mmin
         c = Mmax
         b = (c + a) / 2.0
@@ -679,9 +650,7 @@ class IMF_broken_powerlaw(IMF):
             z *= delta(x - self.lamda[i+1])  # new version
             # z *= delta(x - self.lamda[i])   # old version
 
-        if return_float:
-            return y[0] * z[0]
-        return y * z
+        return y[0] * z[0] if return_float else y * z
 
 
 class IMFSalpeter1955(IMF_broken_powerlaw):
@@ -781,9 +750,7 @@ def prim_power(m, power):
 
     val[power == -1] = np.log(m[power == -1])
 
-    if return_float:
-        return val[0]
-    return val
+    return val[0] if return_float else val
 
 
 def inv_prim_power(x, power):
@@ -815,9 +782,7 @@ def inv_prim_power(x, power):
     # imf.generate_cluster
     val[power == -1] = np.exp(x[power == -1])
     # -----------------------------------------------#
-    if return_float:
-        return val[0]
-    return val
+    return val[0] if return_float else val
 
 
 def log_normal(m, mean_logm, sigma_logm):
@@ -831,9 +796,7 @@ def log_normal(m, mean_logm, sigma_logm):
     z = np.log10(m) - mean_logm
     val = np.exp(-z**2 / (2.0 * sigma_logm**2)) / m
 
-    if return_float:
-        return val[0]
-    return val
+    return val[0] if return_float else val
 
 
 def prim_log_normal(m, mean_logm, sigma_logm):
@@ -847,9 +810,7 @@ def prim_log_normal(m, mean_logm, sigma_logm):
     mu = (np.log10(m) - mean_logm) / (1.4142135623731 * sigma_logm)
     val = 2.88586244942136 * sigma_logm * error(mu)
 
-    if return_float:
-        return val[0]
-    return val
+    return val[0] if return_float else val
 
 
 def inv_prim_log_normal(m, mean_logm, sigma_logm):
@@ -863,9 +824,7 @@ def inv_prim_log_normal(m, mean_logm, sigma_logm):
     mu = inv_error(0.346516861952484 * m / sigma_logm)
     val = 10.0**(1.4142135623731 * sigma_logm * mu + mean_logm)
 
-    if return_float:
-        return val[0]
-    return val
+    return val[0] if return_float else val
 
 
 def mlog_normal(m, mean_logm, sigma_logm):
@@ -879,9 +838,7 @@ def mlog_normal(m, mean_logm, sigma_logm):
     z = np.log10(m) - mean_logm
     val = np.exp(-z**2 / (2.0 * sigma_logm**2))
 
-    if return_float:
-        return val[0]
-    return val
+    return val[0] if return_float else val
 
 
 def prim_mlog_normal(m, mean_logm, sigma_logm):
@@ -900,9 +857,7 @@ def prim_mlog_normal(m, mean_logm, sigma_logm):
     val = error(eta)
     val *= 2.88586244942136 * sigma_logm * np.exp(2.30258509299405 * t1)
 
-    if return_float:
-        return val[0]
-    return val
+    return val[0] if return_float else val
 
 
 def theta_closed(x):
@@ -915,9 +870,7 @@ def theta_closed(x):
     x = np.atleast_1d(x)
     val = (x >= 0).astype("float")
 
-    if is_float:
-        return val[0]
-    return val
+    return val[0] if is_float else val
 
 
 def theta_open(x):
@@ -930,9 +883,7 @@ def theta_open(x):
     x = np.atleast_1d(x)
     val = (x > 0).astype("float")
 
-    if is_float:
-        return val[0]
-    return val
+    return val[0] if is_float else val
 
 
 def delta(x):
@@ -946,9 +897,7 @@ def delta(x):
     val = np.ones(len(x), dtype=float)
     val[x == 0] = 0.5
 
-    if is_float:
-        return val[0]
-    return val
+    return val[0] if is_float else val
 
 
 def gamma_closed(m, left, right):
@@ -964,9 +913,7 @@ def error(x):
 
     val = np.sqrt(1.0 - np.exp(-x2*(1.27323954473516+ax2)/(1+ax2)))
 
-    if x >= 0:
-        return val
-    return -val
+    return val if x >= 0 else -val
 
 
 def inv_error(x):
@@ -977,6 +924,4 @@ def inv_error(x):
 
     # val = np.sqrt(y)
 
-    if x >= 0:
-        return y
-    return -y
+    return y if x >= 0 else -y

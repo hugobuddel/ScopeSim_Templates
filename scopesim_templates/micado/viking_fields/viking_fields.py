@@ -105,9 +105,7 @@ def load_stars_source(cat_id="illum", ra=None, dec=None):
     x, y = 3600 * (tbl["RA"] - ra0), 3600 * (tbl["Dec"] - dec0)
 
     mags = tbl["Hmag"].data
-    src = stars(filter_name="H", amplitudes=mags, spec_types="A0V", x=x, y=y)
-
-    return src
+    return stars(filter_name="H", amplitudes=mags, spec_types="A0V", x=x, y=y)
 
 
 def load_galaxies_source(cat_id="1", pixel_scale=0.004, xs=None, ys=None,

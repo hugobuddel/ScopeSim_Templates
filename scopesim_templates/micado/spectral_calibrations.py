@@ -89,9 +89,7 @@ def line_list(unit_flux=1*PHOTLAM,
     im = np.ones((hdr["NAXIS1"], hdr["NAXIS2"]))
     field = fits.ImageHDU(header=hdr, data=im)
 
-    line_list_src = Source(image_hdu=field, spectra=[spec])
-
-    return line_list_src
+    return Source(image_hdu=field, spectra=[spec])
 
 
 def import_line_spectrum(filename, dwave=0.0001):

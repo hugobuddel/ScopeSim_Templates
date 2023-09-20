@@ -41,7 +41,7 @@ class TestContentOfFields:
         for field in src.fields:
             if isinstance(field, Table):
                 req_colnames = ["x", "y", "ref", "weight"]
-                assert all([col in field.colnames for col in req_colnames])
+                assert all(col in field.colnames for col in req_colnames)
 
     def test_any_imagehdus_have_correct_header_keywords(self, src):
         for field in src.fields:
@@ -50,7 +50,7 @@ class TestContentOfFields:
                             "CUNIT1", "CUNIT2", "CTYPE1", "CTYPE2", "CDELT1",
                             "CDELT2", "CRVAL1", "CRVAL2", "CRPIX1", "CRPIX2",
                             ]
-                assert all([key in field.header for key in req_keys])
+                assert all(key in field.header for key in req_keys)
 
 
 @pytest.mark.parametrize("src", SOURCE_LIST)
