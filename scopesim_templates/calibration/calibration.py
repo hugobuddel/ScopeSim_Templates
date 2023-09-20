@@ -64,10 +64,7 @@ def lamp(waves, fwhm, fluxes) -> Source:
     # A very faint spextrum to add the lines
     spec = Spextrum.flat_spectrum(amplitude=40, waves=w_minmax)
     spec = spec.add_emi_lines(center=waves, fwhm=fwhm, flux=fluxes)
-    src = uniform_source(sed=spec)
-    # src.meta.update({"object": "lamp"})
-
-    return src
+    return uniform_source(sed=spec)
 
 
 @add_function_call_str
@@ -107,11 +104,9 @@ def flat_field(temperature=5000, amplitude=0*u.ABmag, filter_curve="V",
     spec = Spextrum.black_body_spectrum(temperature=temperature,
                                         amplitude=amplitude,
                                         filter_curve=filter_curve)
-    src = uniform_source(sed=spec, amplitude=amplitude,
-                         filter_curve=filter_curve, extend=extend)
-    # src.meta.update({"object": "flat_field"})
-
-    return src
+    return uniform_source(
+        sed=spec, amplitude=amplitude, filter_curve=filter_curve, extend=extend
+    )
 
 
 @add_function_call_str
@@ -124,9 +119,16 @@ def empty_sky() -> Source:
     sky : Source
 
     """
-    sky = Source(lam=np.array([__config__["!spectral.wave_min"],
-                               __config__["!spectral.wave_max"]]),
-                 spectra=np.array([0, 0]), x=[0], y=[0], ref=[0], weight=[0])
-    # src.meta.update({"object": "empty_sky"})
-
-    return sky
+    return Source(
+        lam=np.array(
+            [
+                __config__["!spectral.wave_min"],
+                __config__["!spectral.wave_max"],
+            ]
+        ),
+        spectra=np.array([0, 0]),
+        x=[0],
+        y=[0],
+        ref=[0],
+        weight=[0],
+    )

@@ -35,7 +35,7 @@ class TestNearestSpecType:
         list_in = ["O1I", "G1II", "F4V"]
         list_out = ["O5V", "G0I", "F5V"]
         spec = stu.nearest_spec_type(list_in, pickles.table)
-        assert all([so == lo for so, lo in zip(spec, list_out)])
+        assert all(so == lo for so, lo in zip(spec, list_out))
 
     def test_throws_error_if_wierd_stuff_inputted(self, pickles):
         with pytest.raises(ValueError):

@@ -83,8 +83,7 @@ def point_source(sed, amplitude=None, filter_curve="V", x=0, y=0,
     src : ``scopesim.Source``
     """
     spec = _make_scaled_spectrum(sed, amplitude, filter_curve)
-    src = Source(spectra=spec, x=[x], y=[y], ref=[0], weight=[1])
-    return src
+    return Source(spectra=spec, x=[x], y=[y], ref=[0], weight=[1])
 
 
 @add_function_call_str
@@ -123,8 +122,7 @@ def uniform_source(sed, amplitude=None, filter_curve="V", extend=60,
     hdu = fits.ImageHDU(header=header, data=data)
 
     spec = _make_scaled_spectrum(sed, amplitude, filter_curve)
-    src = Source(spectra=spec, image_hdu=hdu)
-    return src
+    return Source(spectra=spec, image_hdu=hdu)
 
 
 @add_function_call_str
@@ -201,8 +199,7 @@ def source_from_imagehdu(image_hdu, filter_name, pixel_unit_amplitude=None,
     if image_hdu.header.get("SPEC_REF") is None:
         image_hdu.header["SPEC_REF"] = 0
 
-    src = Source(image_hdu=image_hdu, spectra=spec)
-    return src
+    return Source(image_hdu=image_hdu, spectra=spec)
 
 
 @add_function_call_str
@@ -277,8 +274,7 @@ def source_from_imagehdu_with_flux(image_hdu=None, filename=None, ext=1,
     total_flux = flux * unit
     data = data / np.sum(data)
     image_hdu = fits.ImageHDU(data=data, header=header)
-    src = Source(image_hdu=image_hdu, flux=total_flux)
-    return src
+    return Source(image_hdu=image_hdu, flux=total_flux)
 
 
 @add_function_call_str
@@ -314,8 +310,7 @@ def source_from_array(arr, sed, pixel_scale, amplitude, filter_curve,
     hdu = fits.ImageHDU(data=data, header=header)
 
     spec = _make_scaled_spectrum(sed, amplitude, filter_curve)
-    src = Source(image_hdu=hdu, spectra=spec)
-    return src
+    return Source(image_hdu=hdu, spectra=spec)
 
 
 @deprecated_renamed_argument(old_name="image", new_name="arr", since="0.3.0",
@@ -360,10 +355,13 @@ def source_from_file(filename, pixel_scale, sed, amplitude, filter_curve,
 #        ra, dec = wcs.wcs.crval
 
     data[data < cut] = 0
-    src = source_from_array(arr=data, sed=sed, pixel_scale=pixel_scale,
-                            amplitude=amplitude, filter_curve=filter_curve)
-
-    return src
+    return source_from_array(
+        arr=data,
+        sed=sed,
+        pixel_scale=pixel_scale,
+        amplitude=amplitude,
+        filter_curve=filter_curve,
+    )
 
 
 def source_from_cube(cube, ext=1) -> Source:
@@ -382,9 +380,7 @@ def source_from_cube(cube, ext=1) -> Source:
     ext : extension where the data is located
 
     """
-    src = Source(cube=cube, ext=ext)
-
-    return src
+    return Source(cube=cube, ext=ext)
 
 
 def poorman_cube_source(filename=None, hdu=None, ext=1, pixel_scale=None,

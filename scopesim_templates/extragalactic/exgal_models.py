@@ -179,9 +179,7 @@ class DispersionField(Fittable2DModel):
         x_maj = (x - x_0) * sin_theta + (y - y_0) * cos_theta + 0.1
         x_min = -(x - x_0) * cos_theta + (y - y_0) * sin_theta + 0.1  # to avoid inf values
         z = np.sqrt((x_maj / a) ** 2 + (x_min / b) ** 2)
-        result = sigma * 2**(e_in - e_out) * z**e_in * (1 + z)**(e_out - e_in)
-
-        return result
+        return sigma * 2**(e_in - e_out) * z**e_in * (1 + z)**(e_out - e_in)
 
     @property
     def input_units(self):
@@ -310,7 +308,7 @@ class GalaxyBase:
 
         return total_field
 
-    def get_masks(self, ngrid: int = 10):  # TODO 3.9: -> Generator[np.ma.MaskedArray]:
+    def get_masks(self, ngrid: int = 10):    # TODO 3.9: -> Generator[np.ma.MaskedArray]:
         """
         Return a generator of numpy masks from the regrided regions.
 
@@ -328,6 +326,6 @@ class GalaxyBase:
         """
         grid = self.regrid(ngrid=ngrid)
         for value in np.unique(grid):
-            mask = np.ma.masked_where(grid == value, grid,
-                                      copy=True).mask.astype(int)
-            yield mask
+            yield np.ma.masked_where(grid == value, grid, copy=True).mask.astype(
+                int
+            )

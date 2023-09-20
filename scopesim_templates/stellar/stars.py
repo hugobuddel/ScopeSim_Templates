@@ -128,9 +128,17 @@ def star_grid(n, mmin, mmax, filter_name="V", separation=1, ra=RA0, dec=DEC0):
     x = separation * (np.arange(n) % side_len - (side_len - 1) / 2)
     y = separation * (np.arange(n) // side_len - (side_len - 1) / 2)
 
-    src = star_field(n, mmin, mmax, side_len, filter_name=filter_name,
-                     x=x, y=y, ra=ra, dec=dec)
-    return src
+    return star_field(
+        n,
+        mmin,
+        mmax,
+        side_len,
+        filter_name=filter_name,
+        x=x,
+        y=y,
+        ra=ra,
+        dec=dec,
+    )
 
 
 @deprecated_renamed_argument("mags", "amplitudes", "0.1")
@@ -240,9 +248,12 @@ def stars(filter_name, amplitudes, spec_types, x, y, library="pyckles",
                    for spt in zip(cat_spec_types)]
 
     else:
-        spectra = [Spextrum(library + "/" + spec.lower()).scale_to_magnitude(
-            amp, filter_curve=filter_name)
-                   for spec, amp in zip(spec_types, amplitudes)]
+        spectra = [
+            Spextrum(f"{library}/{spec.lower()}").scale_to_magnitude(
+                amp, filter_curve=filter_name
+            )
+            for spec, amp in zip(spec_types, amplitudes)
+        ]
         weight = np.ones(shape=amplitudes.shape)
 
     # get the references to the unique stellar types
@@ -255,18 +266,21 @@ def stars(filter_name, amplitudes, spec_types, x, y, library="pyckles",
     tbl = Table(names=["x", "y", "ref", "weight", "spec_types"],
                 data=[x, y, ref, weight, spec_types])
 
-    src = rc.Source(spectra=spectra, table=tbl)
-    return src
+    return rc.Source(spectra=spectra, table=tbl)
 
 
 def star(filter_name, amplitude, spec_type="A0V", x=0, y=0, library="pyckles"):
-    if isinstance(amplitude, u.Quantity) is False:
+    if not isinstance(amplitude, u.Quantity):
         amplitude = amplitude * u.mag
 
-    src = stars(filter_name, [amplitude.value] * amplitude.unit,
-                [spec_type], [x], [y], library=library)
-
-    return src
+    return stars(
+        filter_name,
+        [amplitude.value] * amplitude.unit,
+        [spec_type],
+        [x],
+        [y],
+        library=library,
+    )
 
 
 star.__doc__ = stars.__doc__

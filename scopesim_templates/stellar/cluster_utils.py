@@ -106,9 +106,7 @@ def closest_pickles(spt):
     classes = np.array(num_only).astype(float)
 
     idx = np.abs(classes - float(spt.strip(to_strip))).argmin()
-    closest_pickle = lum_types[idx]
-
-    return closest_pickle
+    return lum_types[idx]
 
 
 # Unused function, commented out to not annoy pylint...
